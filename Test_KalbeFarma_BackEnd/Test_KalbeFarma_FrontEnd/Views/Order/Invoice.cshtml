@@ -1,0 +1,394 @@
+﻿@model Test_KalbeFarma_FrontEnd.ViewModels.InvoiceViewModel;
+
+@{ 
+    ViewData["Title"] = "Invoice";
+    var mode = ViewBag.Mode;
+}
+
+<link href="~/lib/richtexteditor/rte_theme_default.css" rel="stylesheet" />
+<script src="~/lib/richtexteditor/rte.js"></script>
+<script src="~/lib/richtexteditor/plugins/all_plugins.js"></script>
+
+<form asp-controller="Order" asp-action="@mode" method="post">
+    @{           
+        if (mode == "Edit")
+        {
+            <input asp-for="OrderID" hidden />
+        }
+    }
+    <section class="py-2 px-5 header">
+        <div class="container section-border pb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="badge bg-success text-wrap fs-5 p-2">PAID</div>
+                    <div class="fw-bold fs-4 p-2">Bill</div>
+                </div>
+                <div>
+                    <img id="image" src="https://cdn.pixabay.com/photo/2013/02/12/09/07/microsoft-80658_1280.png" style="width:100px" />
+                </div>
+            </div>
+            <div>
+                <p class="p-2 pl-3" style="border:1px solid black;width:60%">Please find attached your invoice. Thank you for your timely payment.</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p class="fw-bold">Invoice No.</p>
+                    <div class="input-group">
+                        <span class="input-group-text">#</span>
+                        <input type="text" class="form-control" asp-for="InvoiceNumber" value="@Model.InvoiceNumber" readonly />
+                    </div>
+                </div>
+                <div>
+                    <p class="fw-bold">Language</p>
+                    @Html.DropDownListFor(m => m.LanguageList, new SelectList(Model.LanguageList, "Value", "Text"), new { @class = "form-select" })
+                </div>
+                <div>
+                    <p class="fw-bold">Currency</p>
+                    @Html.DropDownListFor(m => m.CurrencyCode, new SelectList(Model.CurrencyList, "Value", "Text"), new { @class = "form-select" })
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="order-information py-2 px-5">
+        <div class="container section-border pb-3">
+            <div class="d-flex justify-content-between">
+                <div class="col-5">
+                    <p class="fw-bold">From</p>
+                    <textarea asp-for="From" class="form-control"></textarea>
+                    <p class="fw-bold">To</p>
+                    @Html.DropDownListFor(m => m.RecipientID, new SelectList(Model.RecipientList, "Value", "Text"), "Select A Recipient", new { @class = "form-select" })
+                    <p class="fw-bold" id="Address"></p>
+                    <p class="fw-bold"><span id="States"></span>, <span id="Country"></span></p>
+                </div>
+                <div class="col-4">
+                    <p class="fw-bold">Date</p>
+
+                    <input type="date" asp-for="OrderDate" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    <p class="fw-bold">Invoice Due</p>
+                    <input type="text" readonly class="form-control" id="invoiceDue" value="Immediately" />
+                    <p class="fw-bold">Purchase Order</p>
+                    <input type="text" asp-for="PurchaseOrderNumber" class="form-control" data-toggle="modal" data-target="#POModal" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="order-details py-2 px-3">
+        <div class="container section-border pb-3" id="order-details">
+            <div class="d-flex justify-content-between" id="detail_0">
+                <div class="col-sm-7">
+                    <p class="fw-bold">Name</p>
+                    <input type="hidden" asp-for="InvoiceDetail[0].Name" class="input_htmlcode" />
+                    @{
+                        if (mode == "Edit")
+                        {
+                            <div id="div_editor_0" class="richtexteditor" style="margin:0 auto;">
+                                @Html.Raw(Model.InvoiceDetail[0].Name)
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="div_editor_0" class="richtexteditor" style="margin:0 auto;">
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-1 text-end">
+                    <p class="fw-bold">Quantity</p>
+                    <input class="form-control text-end quantity" id="quantity_0" name="quantity0" type="text" />
+                    <input asp-for="InvoiceDetail[0].Quantity" hidden />
+                </div>
+                <div class="col-sm-1 text-end">
+                    <p class="fw-bold">Rate</p>
+                    <input class="form-control text-end rate" id="rate_0" type="text" />
+                    <input asp-for="InvoiceDetail[0].Rate" hidden />
+                    <select class="form-select mt-2">
+                        <option>hr</option>
+                        <option>mn</option>
+                        <option>sc</option>
+                        <option>l</option>
+                        <option>ml</option>
+                        <option>kg</option>
+                        <option>g</option>
+                    </select>
+                </div>
+                <div class="col-sm-2 text-end">
+                    <p class="fw-bold">Amount</p>
+                    <div class="input-group">
+                        <span class="input-group-text" id="currencyAmount" style="border-right:0;"></span>
+                        <input class="form-control text-end amount" type="text" readonly id="amount_0" style="border-left:0;" />
+                    </div>
+                    <input asp-for="InvoiceDetail[0].Amount" hidden />
+                </div>
+            </div>
+
+        </div>
+        <button class="btn btn-primary my-2" id="addNewLine">New Line</button>
+    </section>
+
+    <section class="summary py-2 px-3">
+        <div class="container">
+            <div class="d-flex">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-6">
+                    <div class="d-flex justify-content-between py-2 section-border">
+                        <div>
+                            <h6>Subtotal</h6>
+                        </div>
+                        <div>
+                            <span id="subtotalDisplay">0</span>
+                            <input asp-for="SubTotal" hidden />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 section-border">
+                        <div class="input-group w-50">
+                            <input class="form-control w-75" type="text" placeholder="Discount Name" asp-for="DiscountName" />
+                            <input class="form-control w-25" type="number" min="0" max="100" asp-for="DiscountPercentage" />
+                        </div>
+                        <div>
+                            <span id="discountValueDisplay">0</span>
+                            <input asp-for="DiscountValue" hidden />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 section-border">
+                        <div>
+                            <h5>Total</h5>
+                        </div>
+                        <div>
+                            <span class="fw-bold" id="totalDisplay">0</span>
+                            <input asp-for="Total" hidden />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="POModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Purchase Order</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>PO Number</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                        @for (int i = 0; i < Model.PurchaseOrderList.Count(); i++)
+                        {
+                            <tr>
+                                <td>@Model.PurchaseOrderList[i].Number<input asp-for="PurchaseOrderList[i].Number" hidden /></td>
+                                <td>@Model.PurchaseOrderList[i].Pic</td>
+                                <td>@Model.PurchaseOrderList[i].Amount</td>
+                                <td><button name="POOBtn[@i]" data-dismiss="modal" class="btn btn-primary po-button">Select</button></td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+    <a asp-controller="Order" asp-action="Index" class="btn btn-success">Back</a>
+</form>
+<link href="~/css/MyStyle.css" rel="stylesheet" />
+<script type="text/javascript">
+    var subtotal = 0;
+    var total = 0;
+    var discountValue = 0;
+    function ThousandFormatting(number) {
+        number = number.replace(/[^0-9\.]/g, '');
+        if (number == "") {
+            number = "0";
+        }
+        console.log(number);
+        var formattedNumber = (parseFloat(number)).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+        return formattedNumber.slice(1);
+    }
+    if ($('#InvoiceDetail_0__Amount').val() != "") {
+        $('#amount_0').val(ThousandFormatting($('#InvoiceDetail_0__Amount').val()));
+    }
+    if ($('#InvoiceDetail_0__Quantity').val() != "") {
+        $('#quantity_0').val(ThousandFormatting($('#InvoiceDetail_0__Quantity').val()));
+    }
+    if ($('#InvoiceDetail_0__Rate').val() != "") {
+        $('#rate_0').val(ThousandFormatting($('#InvoiceDetail_0__Rate').val()));
+    }
+    if ($('#SubTotal').val() != "") {
+        subtotal = $('#SubTotal').val();
+        $('#subtotalDisplay').html(ThousandFormatting($('#SubTotal').val()));
+    }
+    if ($('#DiscountValue').val() != "") {
+        discountValue = $('#DiscountValue').val();
+        $('#discountValueDisplay').html(ThousandFormatting($('#DiscountValue').val()));
+    }
+    if ($('#Total').val() != "") {
+        total = $('#Total').val();
+        $('#totalDisplay').html(ThousandFormatting($('#Total').val()));
+    }
+    if($('#RecipientID').val() != "") {
+            $.ajax({
+            type: "POST",
+            url: '@(Url.Action("GetRecipient"))',
+            data: { "recipientID": $('#RecipientID').val() },
+            dataType: "json",
+            success: function (response) {
+                console.log('success');
+                $('#Address').html(response["address"]);
+                $('#States').html(response["states"]);
+                $('#Country').html(response["country"]);
+                $('#image').attr('src', response["image"]);
+            },
+            error: function (response) {
+                console.log('Error');
+            }
+        })
+    }
+
+    //var discountPercent = parseInt($('#DiscountPercentage').val());
+    //if (discountPercent > 0) {
+    //    discountValue = subtotal * discountPercent / 100;
+    //} else {
+    //    discountValue = 0;
+    //}
+    //total = subtotal - discountValue;
+
+    $('#DiscountPercentage').change(function () {
+        discountPercent = parseInt($('#DiscountPercentage').val());
+        Calculation(subtotal,discountPercent);
+    });
+
+    function Calculation(subtotal, discountPercent) {
+        var discountValue = 0;
+        if (discountPercent > 0) {
+            discountValue = subtotal * discountPercent / 100;
+        }
+        var total = subtotal - discountValue;
+        $("#subtotalDisplay").html(ThousandFormatting(subtotal.toString()));
+        $("#discountValueDisplay").html(ThousandFormatting(discountValue.toString()));
+        $("#totalDisplay").html(ThousandFormatting(total.toString()));
+        $('#SubTotal').val(subtotal);
+        $('#DiscountValue').val(discountValue);
+        $('#Total').val(total);
+    }
+    $('.quantity').change(function () {
+        var returned = ThousandFormatting(this.value);
+        $('.quantity').val(returned);
+        $("[name='InvoiceDetail[0].Quantity']").val(parseFloat(returned.replace(",", "")));
+        var multiplication = parseFloat(returned.replace(",", "")) * $("[name='InvoiceDetail[0].Rate']").val();
+        $('#InvoiceDetail_0__Amount').val(multiplication);
+        var returnedamount = ThousandFormatting(multiplication.toString());
+        $("#amount_0").val(returnedamount);
+        subtotal = multiplication;
+        Calculation(subtotal, discountValue);
+    })
+
+    $('.rate').change(function () {
+        var returned = ThousandFormatting(this.value);
+        $('.rate').val(returned);
+        $("[name='InvoiceDetail[0].Rate']").val(parseFloat(returned.replace(",", "")));
+        var multiplication = parseFloat(returned.replace(",", "")) * $("[name='InvoiceDetail[0].Quantity']").val();
+        $('#InvoiceDetail_0__Amount').val(multiplication);
+        var returnedamount = ThousandFormatting(multiplication.toString());
+        $("#amount_0").val(returnedamount);
+        subtotal = multiplication;
+        Calculation(subtotal, discountValue);
+    })
+    var jsdetail = 0;
+    $('#addNewLine').click(function () {
+        jsdetail += 1;
+        $('#order-details').append('' +
+            '<div class="d-flex justify-content-between">' +
+            '<div class="col-sm-7">' +
+            '<p class="fw-bold">Name</p>' +
+            '<input type="hidden" asp-for="InvoiceDetail[' + jsdetail + '].Name" class="input_htmlcode" name="htmlcode[' + jsdetail + ']"/>' +
+            '<div id="div_editor_' + jsdetail + '" class="richtexteditor" style="margin:0 auto;"></div>' +
+            '</div>' +
+            '<div class="col-sm-1 text-end">' +
+            '<p class="fw-bold">Quantity</p>' +
+            '<input class="form-control text-end quantity" id="quantity_' + jsdetail + '" name="quantity[' + jsdetail + ']" type="text" />' +
+            '<input asp-for="InvoiceDetail[' + jsdetail + '].Quantity" hidden/>' +
+            '</div>' +
+            '<div class="col-sm-1 text-end">' +
+            '<p class="fw-bold">Rate</p>' +
+            '<input class="form-control text-end rate" id="rate_' + jsdetail + '" type="text"/>' +
+            '<input asp-for="InvoiceDetail[' + jsdetail + '].Rate" hidden/>' +
+            '<select class="form-select mt-2">' +
+            '<option>hr</option>' +
+            '<option>mn</option>' +
+            '<option>sc</option>' +
+            '<option>l</option>' +
+            '<option>ml</option>' +
+            '<option>kg</option>' +
+            '<option>g</option>' +
+            '</select>' +
+            '</div>' +
+            '<div class="col-sm-2 text-end">' +
+            '<p class="fw-bold">Amount</p>' +
+            '<div class="input-group">' +
+            '<span class="input-group-text" id="currencyAmount" style="border-right:0;"></span>' +
+            '<input class="form-control text-end amount" type="text" readonly id="amount_' + jsdetail + '" style="border-left:0;"/>' +
+            '</div>' +
+            '<input asp-for="InvoiceDetail[' + jsdetail + '].Amount" hidden />' +
+            '</div>' +
+            '</div>');
+        event.preventDefault();
+    });
+
+    $('#OrderDate').change(function () {
+        var today = new Date();
+        var orderDate = $('#OrderDate').val();
+        if ($('#OrderDate').val() == today.toISOString().slice(0,10)) {
+            $("#invoiceDue").val('Immediately');
+        } else {
+            $("#invoiceDue").val(orderDate);
+        }
+    });
+    $('#RecipientID').change(function () {
+        $.ajax({
+            type: "POST",
+            url: '@(Url.Action("GetRecipient"))',
+            data: { "recipientID": $('#RecipientID').val() },
+            dataType: "json",
+            success: function (response) {
+                console.log('success');
+                $('#Address').html(response["address"]);
+                $('#States').html(response["states"]);
+                $('#Country').html(response["country"]);
+                $('#image').attr('src', response["image"]);
+            },
+            error: function (response) {
+                console.log('Error');
+            }
+        })
+    });
+    $('#PurchaseOrderNumber').focus(function () {
+        console.log('hello');
+    });
+    $('.po-button').each(function (index) {
+        $("[name='POOBtn["+index+"]']").click(function () {
+            var ponumber = $("[name='PurchaseOrderList[" + index + "].Number']").val();
+            console.log(ponumber);
+            $('#PurchaseOrderNumber').val(ponumber);
+        });
+    });
+    var editorCfg = {};
+    editorCfg.toolbar = "basic";
+    var editor1 = new RichTextEditor("#div_editor_0", editorCfg);
+    editor1.attachEvent("change", function () {
+        $("[name='InvoiceDetail[0].Name'").val(editor1.getHTMLCode());
+    });
+
+    $('#CurrencyCode').change(function () {
+        $('#currencyAmount').html($('#CurrencyCode').val());
+    });
+</script>

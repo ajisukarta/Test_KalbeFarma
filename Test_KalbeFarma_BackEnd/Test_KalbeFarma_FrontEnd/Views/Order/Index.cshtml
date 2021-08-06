@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Test_KalbeFarma_DataAccess.Models.Orders>
+@{ 
+    ViewData["Title"] = "Index Page";
+}
+
+<h2>Index Page</h2>
+<a asp-controller="Order" asp-action="Create" class="btn btn-success m-2">Create New Order</a>
+<table class="table table-striped m-2">
+    <tr>
+        <th>Invoice No.</th>
+        <th class="col-sm-4">From</th>
+        <th>To</th>
+        <th>Order Date</th>
+        <th>PO No.</th>
+        <th>Total</th>
+        <th></th>
+    </tr>
+    @foreach(var order in Model)
+    {
+        <tr>
+            <td>@order.InvoiceNo</td>
+            <td>@order.From</td>
+            <td>@order.RecipientId</td>
+            <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+            <td>@order.Pono</td>
+            <td>@order.Total</td>
+            <td>
+                <a asp-controller="Order" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-primary">Edit</a>
+                <a asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id" class="btn btn-danger btn-delete">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+<button data-toggle="modal" data-target="#delete-confirmation" id="toggle-confirm" hidden></button>
+<div class="modal fade" id="delete-confirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h5>Are you sure want to delete data?</h5>
+                <div class="d-flex">
+                    <button class="btn btn-primary" id="confirm-yes">Yes</button>
+                    <button class="btn btn-warning" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

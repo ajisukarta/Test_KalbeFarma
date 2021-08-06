@@ -1,0 +1,12 @@
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\bin\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.deps.json
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\bin\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.runtimeconfig.json
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\bin\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.runtimeconfig.dev.json
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\bin\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.dll
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\bin\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.pdb
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.csproj.AssemblyReference.cache
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.AssemblyInfoInputs.cache
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.AssemblyInfo.cs
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.dll
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.pdb
+C:\Users\0815\Documents\Visual Studio 2019\Projects\Test_KalbeFarma_BackEnd\Test_KalbeFarma_DataAccess\obj\Debug\netcoreapp3.1\Test_KalbeFarma_DataAccess.genruntimeconfig.cache
